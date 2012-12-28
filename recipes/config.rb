@@ -75,6 +75,10 @@ node["chef_client"]["load_gems"].each do |gem_name, gem_info_hash|
   chef_requires.push(gem_info_hash[:require_name] || gem_name)
 end
 
+node["chef_client"]["passive_load_gems"].each do |gem_name|
+  chef_requires.push(gem_name)
+end
+
 template "#{node["chef_client"]["conf_dir"]}/client.rb" do
   source "client.rb.erb"
   owner root_user
