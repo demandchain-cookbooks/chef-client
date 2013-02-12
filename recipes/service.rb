@@ -19,6 +19,10 @@
 # limitations under the License.
 #
 
+class ::Chef::Recipe
+  include ::Opscode::ChefClient::Helpers
+end
+
 require 'chef/version_constraint'
 require 'chef/exceptions'
 
@@ -58,23 +62,8 @@ end
 
 node.set["chef_client"]["bin"] = client_bin
 
-
-%w{run_path cache_path backup_path log_dir}.each do |key|
-  directory node["chef_client"][key] do
-    recursive true
-    mode 0755
-    unless node["platform"] == "windows"
-      if node.recipe?("chef-server")
-        owner "chef"
-        group "chef"
-      else
-        owner "root"
-        group root_group
-      end
-    end
-  end
-end
-
+# libraries/helpers.rb method to DRY directory creation resources
+create_directories
 
 case node["chef_client"]["init_style"]
 when "init"
@@ -112,7 +101,7 @@ when "smf"
     action :create
     owner "root"
     group "bin"
-    mode "0644"
+    mode "0755"
     recursive true
   end
 
@@ -121,7 +110,7 @@ when "smf"
     source "solaris/chef-client.erb"
     owner "root"
     group "root"
-    mode "0777"
+    mode "0755"
     notifies :restart, "service[chef-client]"
   end
 

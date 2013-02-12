@@ -1,3 +1,18 @@
+## v2.1.10:
+
+* [COOK-2316] - Permissions for SMF init type break Solaris 10
+
+## v2.1.8:
+
+* [COOK-2192] - Add option to use cron_d resource for cron management
+* [COOK-2261] - pin runit dependency
+
+## v2.1.6:
+
+* [COOK-1978] - make cron output location configurable
+* [COOK-2169] - use helper library to make path permissions consistent
+* [COOK-2170] - test filename cleanup (dev repository only)
+
 ## v2.1.4:
 
 * [COOK-2108] - corrected Chef and Ohai version requirements in README

@@ -57,14 +57,22 @@ ENV['HTTP_PROXY'] = "<%= node["chef_client"]["http_proxy"] %>"
 
 Ohai::Config[:plugin_path] << "<%= node["ohai"]["plugin_path"] %>"
 <% end -%>
+
+<% unless @ohai_disabled_plugins.empty? %>
+Ohai::Config[:disabled_plugins] =  <%= @ohai_disabled_plugins %>
+<% end -%>
+
+<% if @chef_environment %>
+environment "<%= @chef_environment %>"
+<% end %>
+
 <% unless @chef_report_handlers.empty? -%>
+  <% @chef_report_handlers.each do |handler| %>
+    report_handlers << <%= handler["class"] %>.new(<%= handler["arguments"].join(',') %>)
+  <% end %>
+<% end %>
 
-<% @chef_report_handlers.each do |handler| -%>
-report_handlers << <%= handler["class"] %>.new(<%= handler["arguments"].join(',') %>)
-<% end -%>
-<% end -%>
 <% unless @chef_exception_handlers.empty? -%>
-
 <% @chef_exception_handlers.each do |handler| -%>
 exception_handlers << <%= handler["class"] %>.new(<%= handler["arguments"].join(',') %>)
 <% end -%>
